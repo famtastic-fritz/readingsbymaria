@@ -1,0 +1,78 @@
+fam8_cog.xxsmall:
+  label: xxsmall (0)
+  mediaQuery: 'all and (min-width: 0px)'
+  weight: 0
+  multipliers:
+    - 1x
+fam8_cog.xsmall:
+  label: xsmall (375px)
+  mediaQuery: 'all and (min-width: 375px)'
+  weight: 1
+  multipliers:
+    - 1x
+fam8_cog.small:
+  label: small (576px)
+  mediaQuery: 'all and (min-width: 576px)'
+  weight: 2
+  multipliers:
+    - 1x
+fam8_cog.smallish:
+  label: small-ish (680px)
+  mediaQuery: 'all and (min-width: 680px)'
+  weight: 3
+  multipliers:
+    - 1x
+fam8_cog.medium:
+  label: medium (768px)
+  mediaQuery: 'all and (min-width: 768px)'
+  weight: 4
+  multipliers:
+    - 1x
+fam8_cog.mediumish:
+  label: medium-ish (960px)
+  mediaQuery: 'all and (min-width: 960px)'
+  weight: 5
+  multipliers:
+    - 1x
+fam8_cog.large:
+  label: large (1024px)
+  mediaQuery: 'all and (min-width: 1024px)'
+  weight: 6
+  multipliers:
+    - 1x
+fam8_cog.largeish:
+  label: large-ish (1080px)
+  mediaQuery: 'all and (min-width: 1080px)'
+  weight: 7
+  multipliers:
+    - 1x
+fam8_cog.xlarge:
+  label: xlarge (1280px)
+  mediaQuery: 'all and (min-width: 1280px)'
+  weight: 8
+  multipliers:
+    - 1x
+fam8_cog.xlarge2:
+  label: xlarge 2 (1400px)
+  mediaQuery: 'all and (min-width: 1400px)'
+  weight: 8
+  multipliers:
+    - 1x
+fam8_cog.xxlarge:
+  label: xxlarge (1650px)
+  mediaQuery: 'all and (min-width: 1650px)'
+  weight: 9
+  multipliers:
+    - 1x
+fam8_cog.xxlarge2:
+  label: xxlarge 2 (1800px)
+  mediaQuery: 'all and (min-width: 1800px)'
+  weight: 9
+  multipliers:
+    - 1x
+fam8_cog.xxxlarge:
+  label: xxxlarge (1920px)
+  mediaQuery: 'all and (min-width: 1920px)'
+  weight: 10
+  multipliers:
+    - 1x

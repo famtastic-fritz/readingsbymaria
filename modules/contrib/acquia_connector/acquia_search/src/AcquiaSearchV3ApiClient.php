@@ -1,10 +1,13 @@
 <?php
 
+/**
+ * @file
+ * Contains Drupal\acquia_search\AcquiaSearchV3ApiClient.
+ */
+
 namespace Drupal\acquia_search;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\CacheBackendInterface;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -12,84 +15,38 @@ use GuzzleHttp\Exception\RequestException;
  *
  * @package Drupal\acquia_search\
  */
+
 class AcquiaSearchV3ApiClient {
-
-  /**
-   * Search V3 API host.
-   *
-   * @var string
-   */
-  protected $searchV3Host;
-
-  /**
-   * Search V3 API key.
-   *
-   * @var string
-   */
-  protected $searchV3ApiKey;
-
-  /**
-   * Http client.
-   *
-   * @var \GuzzleHttp\ClientInterface
-   */
-  protected $httpClient;
-
-  /**
-   * Headers.
-   *
-   * @var array
-   */
-  protected $headers;
-
-  /**
-   * Cache.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
 
   /**
    * The HTTP client to fetch the feed data with.
    *
-   * @var \GuzzleHttp\Client
+   * @var \GuzzleHttp\Client $client
    */
   protected $client;
 
-  /**
-   * AcquiaSearchV3ApiClient constructor.
-   *
-   * @param string $host
-   *   Search V3 API host.
-   * @param string $api_key
-   *   Search V3 API key.
-   * @param \GuzzleHttp\ClientInterface $http_client
-   *   Http client.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   Cache.
-   */
-  public function __construct($host, $api_key, ClientInterface $http_client, CacheBackendInterface $cache) {
-    $this->searchV3Host = $host;
-    $this->searchV3ApiKey = $api_key;
+  public function __construct($host, $api_key, $http_client, $cache) {
+    $this->search_v3_host = $host;
+    $this->search_v3_api_key = $api_key;
     $this->httpClient = $http_client;
-    $this->headers = [
+    $this->headers = array(
       'Content-Type' => 'application/json',
       'Accept' => 'application/json',
-    ];
+    );
     $this->cache = $cache;
   }
 
   /**
    * Helper function to fetch all search v3 indexes for given network_id.
    *
-   * @param string $network_id
+   * @param $network_id
    *   Subscription network id.
    *
    * @return array|false
    *   Response array or FALSE
    */
   public function getSearchV3Indexes($network_id) {
-    $result = [];
+    $result = array();
     if ($cache = $this->cache->get('acquia_search.v3indexes')) {
       if (is_array($cache->data) && $cache->expire > time()) {
         return $cache->data;
@@ -99,11 +56,11 @@ class AcquiaSearchV3ApiClient {
     if (is_array($indexes)) {
       if (!empty($indexes)) {
         foreach ($indexes as $index) {
-          $result[] = [
+          $result[] = array(
             'balancer' => $index['host'],
             'core_id' => $index['name'],
-            'version' => 'v3',
-          ];
+            'version' => 'v3'
+          );
         }
       }
       // Cache will be set in both cases, 1. when search v3 cores are found and
@@ -120,12 +77,11 @@ class AcquiaSearchV3ApiClient {
   }
 
   /**
-   * Fetch the search v3 index keys for given core_id and network_id.
+   * Helper function to fetch the search v3 index keys for
+   * given core_id and network_id.
    *
-   * @param string $core_id
-   *   Core id.
-   * @param string $network_id
-   *   Acquia identifier.
+   * @param $core_id
+   * @param $network_id
    *
    * @return array|bool|false
    *   Search v3 index keys.
@@ -163,17 +119,17 @@ class AcquiaSearchV3ApiClient {
    *   Response array or FALSE.
    */
   public function searchRequest($path) {
-    $data = [
-      'host' => $this->searchV3Host,
-      'headers' => [
-        'x-api-key' => $this->searchV3ApiKey,
-      ],
-    ];
+    $data = array(
+      'host' => $this->search_v3_host,
+      'headers' => array(
+        'x-api-key' => $this->search_v3_api_key,
+      )
+    );
     $uri = $data['host'] . $path;
-    $options = [
+    $options = array(
       'headers' => $data['headers'],
       'body' => Json::encode($data),
-    ];
+    );
 
     try {
       $response = $this->httpClient->get($uri, $options);

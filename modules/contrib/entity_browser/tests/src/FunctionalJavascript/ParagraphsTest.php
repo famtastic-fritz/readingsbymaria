@@ -7,12 +7,13 @@ namespace Drupal\Tests\entity_browser\FunctionalJavascript;
  *
  * @group entity_browser
  */
-class ParagraphsTest extends EntityBrowserWebDriverTestBase {
+class ParagraphsTest extends EntityBrowserJavascriptTestBase {
 
   /**
    * {@inheritdoc}
    */
   public static $modules = [
+    'ctools',
     'views',
     'block',
     'node',

@@ -23,9 +23,9 @@ class EntityBrowserWidget extends Plugin {
   /**
    * The human-readable name of the widget.
    *
-   * @var \Drupal\Core\Annotation\Translation
-   *
    * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $label;
 
@@ -34,9 +34,9 @@ class EntityBrowserWidget extends Plugin {
    *
    * This will be shown when adding or configuring this widget.
    *
-   * @var \Drupal\Core\Annotation\Translation
-   *
    * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation (optional)
    */
   public $description = '';
 

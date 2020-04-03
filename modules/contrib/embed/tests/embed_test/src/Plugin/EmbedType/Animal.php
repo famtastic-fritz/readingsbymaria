@@ -58,7 +58,7 @@ class Animal extends EmbedTypeBase {
    * {@inheritdoc}
    */
   public function getDefaultIconUrl() {
-    return '/animal.png';
+    return '';
   }
 
 }

@@ -14,7 +14,7 @@ use Drupal\node\Entity\Node;
  *
  * @group entity_browser
  */
-class ImageFieldTest extends EntityBrowserWebDriverTestBase {
+class ImageFieldTest extends EntityBrowserJavascriptTestBase {
 
   /**
    * Created file entity.
@@ -49,7 +49,7 @@ class ImageFieldTest extends EntityBrowserWebDriverTestBase {
       ],
     ])->save();
 
-    \Drupal::service('file_system')->copy(\Drupal::root() . '/core/modules/simpletest/files/image-test.jpg', 'public://example.jpg');
+    file_unmanaged_copy(\Drupal::root() . '/core/modules/simpletest/files/image-test.jpg', 'public://example.jpg');
     $this->image = File::create([
       'uri' => 'public://example.jpg',
     ]);
@@ -120,17 +120,13 @@ class ImageFieldTest extends EntityBrowserWebDriverTestBase {
     $this->getSession()->switchToIFrame('entity_browser_iframe_test_entity_browser_iframe_view');
     $this->getSession()->getPage()->checkField('entity_browser_select[file:' . $this->image->id() . ']');
     $this->getSession()->getPage()->pressButton('Select entities');
-    $this->waitForAjaxToFinish();
-    $button = $this->assertSession()->waitForButton('Use selected');
+    $this->getSession()->getPage()->pressButton('Use selected');
     $this->assertSession()->pageTextContains('example.jpg');
-    $button->press();
-
     // Switch back to the main page.
     $this->getSession()->switchToIFrame();
     $this->waitForAjaxToFinish();
     // Check if the image thumbnail exists.
-    $this->assertSession()
-      ->waitForElementVisible('xpath', '//tr[@data-drupal-selector="edit-field-image-current-1"]');
+    $this->assertSession()->elementExists('xpath', '//*[@data-drupal-selector="edit-field-image-current-' . $this->image->id() . '-display"]');
     // Test if the image filename is present.
     $this->assertSession()->pageTextContains('example.jpg');
     // Test specifying Alt and Title texts and saving the node.
@@ -156,7 +152,7 @@ class ImageFieldTest extends EntityBrowserWebDriverTestBase {
     $this->assertSession()->linkExists('Select entities');
 
     // Test the Replace functionality.
-    \Drupal::service('file_system')->copy(\Drupal::root() . '/core/modules/simpletest/files/image-test.jpg', 'public://example2.jpg');
+    file_unmanaged_copy(\Drupal::root() . '/core/modules/simpletest/files/image-test.jpg', 'public://example2.jpg');
     $image2 = File::create(['uri' => 'public://example2.jpg']);
     $image2->save();
     \Drupal::service('file.usage')->add($image2, 'entity_browser', 'test', '1');
@@ -195,14 +191,8 @@ class ImageFieldTest extends EntityBrowserWebDriverTestBase {
     // expect the field to override the widget.
     $this->getSession()->getPage()->attachFileToField('files[upload][]', $file_wrong_type);
     $this->waitForAjaxToFinish();
-    if (version_compare(\Drupal::VERSION, '8.7', '>=')) {
-      $this->assertSession()->responseContains('Only files with the following extensions are allowed: <em class="placeholder">jpg</em>.');
-      $this->assertSession()->responseContains('The selected file <em class="placeholder">druplicon.png</em> cannot be uploaded.');
-    }
-    else {
-      $this->assertSession()->pageTextContains('Only files with the following extensions are allowed: jpg');
-      $this->assertSession()->pageTextContains('The specified file druplicon.png could not be uploaded');
-    }
+    $this->assertSession()->pageTextContains('Only files with the following extensions are allowed: jpg');
+    $this->assertSession()->pageTextContains('The specified file druplicon.png could not be uploaded');
     // Upload an image bigger than the field widget's configured max size.
     $this->getSession()->getPage()->attachFileToField('files[upload][]', $file_too_big);
     $this->waitForAjaxToFinish();
@@ -211,11 +201,8 @@ class ImageFieldTest extends EntityBrowserWebDriverTestBase {
     $this->getSession()->getPage()->attachFileToField('files[upload][]', $file_just_right);
     $this->waitForAjaxToFinish();
     $this->getSession()->getPage()->pressButton('Select files');
-    $this->waitForAjaxToFinish();
-    $button = $this->assertSession()->waitForButton('Use selected');
+    $this->getSession()->getPage()->pressButton('Use selected');
     $this->assertSession()->pageTextContains('image-test.jpg');
-    $button->press();
-    $this->waitForAjaxToFinish();
     // Check that the file has uploaded to the correct sub-directory.
     $this->getSession()->switchToIFrame();
     $this->waitForAjaxToFinish();

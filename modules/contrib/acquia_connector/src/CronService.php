@@ -16,16 +16,12 @@ class CronService implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, $message, array $context = array()) {
     // Make sure that even when cron failures prevent hook_cron() from being
     // called, we still send out a heartbeat.
     if (!empty($context['channel']) && ($context['channel'] == 'cron') && ($message == 'Attempting to re-run cron while it is already running.')) {
-      // Avoid doing this too frequently.
-      $last_update_attempt = \Drupal::state()->get('acquia_subscription_data.timestamp', FALSE);
-      if (!$last_update_attempt || ((REQUEST_TIME - $last_update_attempt) >= 60 * 60)) {
-        $subscription = new Subscription();
-        $subscription->update();
-      }
+      $subscription = new Subscription();
+      $subscription->update();
     }
   }
 

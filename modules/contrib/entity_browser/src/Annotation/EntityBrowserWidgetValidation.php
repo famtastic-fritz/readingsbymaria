@@ -23,24 +23,23 @@ class EntityBrowserWidgetValidation extends Plugin {
   /**
    * The human-readable name of the widget validator.
    *
-   * @var \Drupal\Core\Annotation\Translation
-   *
    * @ingroup plugin_translatable
+   *
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $label;
 
   /**
-   * The data type plugin ID, for which a constraint should be added (Optional).
+   * (Optional) The data type plugin ID, for which a constraint should be added.
    *
    * @var string
    */
   public $data_type;
 
   /**
-   * The constraint ID (Optional).
+   * (Optional) The constraint ID.
    *
    * @var string
    */
   public $constraint;
-
 }

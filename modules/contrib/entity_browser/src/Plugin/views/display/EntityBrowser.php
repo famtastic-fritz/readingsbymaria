@@ -60,6 +60,7 @@ class EntityBrowser extends DisplayPluginBase {
     }
   }
 
+
   /**
    * {@inheritdoc}
    */

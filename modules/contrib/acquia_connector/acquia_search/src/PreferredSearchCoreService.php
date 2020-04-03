@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains Drupal\acquia_search\PreferredSearchCoreService.
+ */
+
 namespace Drupal\acquia_search;
 
 /**
@@ -10,48 +15,13 @@ namespace Drupal\acquia_search;
 class PreferredSearchCoreService {
 
   /**
-   * Acquia subscription identifier.
-   *
-   * @var string
-   */
-  protected $acquiaIdentifier;
-
-  /**
-   * Acquia environment.
-   *
-   * @var string
-   */
-  protected $ahEnv;
-
-  /**
-   * Sites folder name.
-   *
-   * @var string
-   */
-  protected $sitesFolderName;
-
-  /**
-   * Site DB name.
-   *
-   * @var string
-   */
-  protected $ahDbName;
-
-  /**
-   * Available search cores.
-   *
-   * @var array
-   */
-  protected $availableCores;
-
-  /**
    * ExpectedCoreService constructor.
    *
    * @param string $acquia_identifier
    *   E.g. 'WXYZ-12345'.
    * @param string $ah_env
    *   E.g. 'dev', 'stage' or 'prod'.
-   * @param string $sites_folder_name
+   * @param string $sites_foldername
    *   E.g. 'default'.
    * @param string $ah_db_name
    *   E.g. 'my_site_db'.
@@ -64,13 +34,13 @@ class PreferredSearchCoreService {
    *       ],
    *     ].
    */
-  public function __construct($acquia_identifier, $ah_env, $sites_folder_name, $ah_db_name, array $available_cores) {
+  public function __construct($acquia_identifier, $ah_env, $sites_foldername, $ah_db_name, $available_cores) {
 
-    $this->acquiaIdentifier = $acquia_identifier;
-    $this->ahEnv = $ah_env;
-    $this->sitesFolderName = $sites_folder_name;
-    $this->ahDbName = $ah_db_name;
-    $this->availableCores = $available_cores;
+    $this->acquia_identifier = $acquia_identifier;
+    $this->ah_env = $ah_env;
+    $this->sites_foldername = $sites_foldername;
+    $this->ah_db_name = $ah_db_name;
+    $this->available_cores = $available_cores;
 
   }
 
@@ -100,6 +70,7 @@ class PreferredSearchCoreService {
 
     return $core['balancer'];
   }
+
 
   /**
    * Determines whether the expected core ID matches any available core IDs.
@@ -134,7 +105,7 @@ class PreferredSearchCoreService {
     }
 
     $expected_cores = $this->getListOfPossibleCores();
-    $available_cores_sorted = $this->sortCores($this->availableCores);
+    $available_cores_sorted = $this->sortCores($this->available_cores);
 
     foreach ($expected_cores as $expected_core) {
 
@@ -155,19 +126,17 @@ class PreferredSearchCoreService {
    *
    * It puts v3 cores first.
    *
-   * @param array $cores
-   *   Unsorted array of search cores.
+   * @param $cores
    *
    * @return array
-   *   Array of search cores. V3 cores in the begging of the result array.
    */
-  protected function sortCores(array $cores) {
+  protected function sortCores($cores) {
 
-    $v3_cores = array_filter($cores, function ($core) {
+    $v3_cores = array_filter($cores, function($core) {
       return $this->isCoreV3($core);
     });
 
-    $regular_cores = array_filter($cores, function ($core) {
+    $regular_cores = array_filter($cores, function($core) {
       return !$this->isCoreV3($core);
     });
 
@@ -177,13 +146,11 @@ class PreferredSearchCoreService {
   /**
    * Determines whether given search core is version 3.
    *
-   * @param array $core
-   *   Search core.
+   * @param $core
    *
    * @return bool
-   *   TRUE if the given search core is V3, FALSE otherwise.
    */
-  protected function isCoreV3(array $core) {
+  protected function isCoreV3($core) {
     return !empty($core['version']) && $core['version'] === 'v3';
   }
 
@@ -217,30 +184,31 @@ class PreferredSearchCoreService {
    */
   public function getListOfPossibleCores() {
 
-    $possible_core_ids = [];
+    $possible_core_ids = array();
 
     // In index naming, we only accept alphanumeric chars.
-    $sites_foldername = preg_replace('/[^a-zA-Z0-9]+/', '', $this->sitesFolderName);
-    $ah_env = preg_replace('/[^a-zA-Z0-9]+/', '', $this->ahEnv);
+    $sites_foldername = preg_replace('@[^a-zA-Z0-9]+@', '', $this->sites_foldername);
+    $ah_env = preg_replace('@[^a-zA-Z0-9]+@', '', $this->ah_env);
 
     if ($ah_env) {
 
       // When there is an Acquia DB name defined, priority is to pick
       // WXYZ-12345.[env].[db_name], then WXYZ-12345.[env].[site_foldername].
       // If we're sure this is prod, then 3rd option is WXYZ-12345.
-      // @TODO: Support for [id]_[env][sitename] cores?
-      if ($this->ahDbName) {
-        $possible_core_ids[] = $this->acquiaIdentifier . '.' . $ah_env . '.' . $this->ahDbName;
+      if ($this->ah_db_name) {
+        $possible_core_ids[] = $this->acquia_identifier . '.' . $ah_env . '.' . $this->ah_db_name;
       }
 
-      $possible_core_ids[] = $this->acquiaIdentifier . '.' . $ah_env . '.' . $sites_foldername;
+      $possible_core_ids[] = $this->acquia_identifier . '.' . $ah_env . '.' . $sites_foldername;
+
+      // @TODO: Support for [id]_[env][sitename] cores?
 
     }
 
     // For production-only, we allow auto-connecting to the suffix-less core
     // as the fallback.
     if (!empty($_SERVER['AH_PRODUCTION']) || !empty($_ENV['AH_PRODUCTION'])) {
-      $possible_core_ids[] = $this->acquiaIdentifier;
+      $possible_core_ids[] = $this->acquia_identifier;
     }
 
     return $possible_core_ids;
