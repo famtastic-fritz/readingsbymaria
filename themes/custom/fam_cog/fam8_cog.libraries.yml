@@ -1,0 +1,183 @@
+global-styling:
+  version: VERSION
+  css:
+    theme:
+      ## NOTE: critical css is inline. see mmg8_cog.theme and html.html.twig
+      dist/non-critical.min.css: {}
+      https://use.typekit.net/mhl2sjt.css: { type: external }
+      /libraries/chosen/chosen.min.css: {}
+slick:
+    version: VERSION
+    css:
+      theme:
+        libraries/slick/slick.css: {}
+    js:
+      libraries/slick/slick.min.js: {}
+tota11y:
+  version: VERSION
+  js:
+    libraries/tota11y/tota11y.min.js: {}
+article-content-list:
+    version: VERSION
+    css:
+      theme:
+        dist/component-entities/article-content-list/article-content-list.min.css: {}
+custom-markup:
+    version: VERSION
+    css:
+      theme:
+        dist/component-entities/custom-markup/custom-markup.min.css: {}
+dfp-tags:
+    version: VERSION
+    css:
+      theme:
+        dist/component-entities/dfp-tags/dfp-tags.min.css: {}
+listings:
+    version: VERSION
+    css:
+      theme:
+        dist/component-entities/listings/listings.min.css: {}
+        dist/components/node/listings/listing--teaser.min.css: {}
+    js:
+      dist/js/listings.js: {}
+    dependencies:
+      - mmg8_cog/scrollmagic
+      - mmg8_cog/miles
+promo:
+    version: VERSION
+    css:
+      theme:
+        dist/component-entities/promo/promo.min.css: {}
+related-content:
+    version: VERSION
+    css:
+      theme:
+        dist/component-entities/related-content/related-content.min.css: {}
+sharethis:
+    version: VERSION
+    css:
+      theme:
+        dist/component-entities/sharethis/sharethis.min.css: {}
+slideshow:
+    version: VERSION
+    css:
+      theme:
+        dist/component-entities/slideshow/slideshow.min.css: {}
+video-player:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/video-player/video-player.min.css: {}
+global-scripts:
+  version: VERSION
+  js:
+    dist/js/mmg8_cog.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax
+    - core/jquery.once
+    - chosen/drupal.chosen
+    - mmg8_cog/miles
+scrollmagic:
+  version: VERSION
+  js:
+    libraries/scrollmagic/ScrollMagic.min.js: { weight: -3 }
+hero:
+  version: VERSION
+  js:
+    dist/js/hero.js: {}
+  dependencies:
+    - mmg8_cog/scrollmagic
+featured-videos:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/featured-videos/featured-videos.min.css: {}
+      dist/components/node/video/video-featured.min.css: {}
+  dependencies:
+    - colorbox/colorbox
+related-videos:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/related-videos/related-videos.min.css: {}
+      dist/components/node/video/video-related.min.css: {}
+  js:
+    dist/js/related-videos.js: {}
+  dependencies:
+    - colorbox/colorbox
+cta-large-promo:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/cta-large-promo/cta-large-promo.min.css: {}
+image-menu:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/image-menu/image-menu.min.css: {}
+text-with-cta:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/text-with-cta/text-with-cta.min.css: {}
+industry-list:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/industry-list/industry-list.min.css: {}
+interactive-map:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/interactive-map/interactive-map.min.css: {}
+road-trip:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/road-trip/road-trip.min.css: {}
+listing-full:
+  version: VERSION
+  css:
+    theme:
+      dist/components/node/listings/listing--full.min.css: {}
+      dist/components/node/left-sidebar.min.css: {}
+  js:
+    dist/js/listing-full.js: {}
+    dist/js/sidebar.js: {}
+  dependencies:
+    - mmg8_cog/scrollmagic
+secondary-nav:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/secondary-nav/secondary-nav.min.css: {}
+listing-full-event:
+  version: VERSION
+  css:
+    theme:
+      dist/components/node/listings/listing--full-event.min.css: {}
+social:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/social/social.min.css: {}
+highlighted-events:
+    version: VERSION
+    css:
+      theme:
+        dist/component-entities/highlighted-events/highlighted-events.min.css: {}
+miles:
+  version: VERSION
+  js:
+    dist/js/miles.js: {}
+region-map:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/region-map/region-map.min.css: {}
+breadcrumb:
+  version: VERSION
+  css:
+    theme:
+      dist/component-entities/breadcrumb/breadcrumb.min.css: {}

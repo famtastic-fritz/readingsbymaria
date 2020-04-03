@@ -12,7 +12,7 @@ use Drupal\acquia_connector\Helper\Storage;
 class Subscription {
 
   /**
-   * Errors defined by Acquia.
+   * Errors defined by the Acquia Network.
    */
   const NOT_FOUND = 1000;
   const KEY_MISMATCH = 1100;
@@ -26,15 +26,15 @@ class Subscription {
   const PROVISION_ERROR = 9000;
 
   /**
-   * Subscription message lifetime defined by Acquia.
+   * Subscription message lifetime defined by the Acquia Network.
    */
   // 15 * 60.
   const MESSAGE_LIFETIME = 900;
 
   /**
-   * Get subscription status from Acquia, and store the result.
+   * Get subscription status from the Acquia Network, and store the result.
    *
-   * This check also sends a heartbeat to Acquia unless
+   * This check also sends a heartbeat to the Acquia Network unless
    * $params['no_heartbeat'] == 1.
    *
    * @param array $params
@@ -43,7 +43,7 @@ class Subscription {
    * @return mixed
    *   FALSE, integer (error number), or subscription data.
    */
-  public function update(array $params = []) {
+  public function update($params = array()) {
     $config = \Drupal::configFactory()->getEditable('acquia_connector.settings');
     $current_subscription = $config->get('subscription_data');
     $subscription = FALSE;

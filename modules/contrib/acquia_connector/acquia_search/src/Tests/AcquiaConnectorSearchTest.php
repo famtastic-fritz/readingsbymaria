@@ -1,9 +1,13 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\acquia_search\Tests;
 
-use Drupal\search_api\Entity\Server;
 use Drupal\simpletest\WebTestBase;
+use Drupal\search_api\Entity\Server;
 
 /**
  * Tests the functionality of the Acquia Search module.
@@ -11,53 +15,17 @@ use Drupal\simpletest\WebTestBase;
  * @group Acquia search
  */
 class AcquiaConnectorSearchTest extends WebTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
   protected $strictConfigSchema = FALSE;
-
-  /**
-   * Acquia subscription ID.
-   *
-   * @var string
-   */
   protected $id;
-
-  /**
-   * Key.
-   *
-   * @var string
-   */
   protected $key;
-
-  /**
-   * Salt.
-   *
-   * @var string
-   */
   protected $salt;
-
-  /**
-   * Search server.
-   *
-   * @var string
-   */
+  protected $derivedKey;
+  protected $url;
   protected $server;
-
-  /**
-   * Search index.
-   *
-   * @var string
-   */
   protected $index;
-
-  /**
-   * Module settings path.
-   *
-   * @var string
-   */
   protected $settingsPath;
+  protected $acquiaSearchEnvironmentId = 'acquia_search';
+
 
   /**
    * Modules to enable.
@@ -90,9 +58,9 @@ class AcquiaConnectorSearchTest extends WebTestBase {
     $content_type = $this->drupalCreateContentType();
 
     // Add a node of the new content type.
-    $node_data = [
+    $node_data = array(
       'type' => $content_type->id(),
-    ];
+    );
 
     $this->drupalCreateNode($node_data);
     $this->connect();
@@ -108,15 +76,15 @@ class AcquiaConnectorSearchTest extends WebTestBase {
     $admin_user = $this->createAdminUser();
     $this->drupalLogin($admin_user);
 
-    $edit_fields = [
+    $edit_fields = array(
       'acquia_identifier' => $this->randomString(8),
       'acquia_key' => $this->randomString(8),
-    ];
+    );
 
     $submit_button = 'Connect';
     $this->drupalPostForm('admin/config/system/acquia-connector/credentials', $edit_fields, $submit_button);
 
-    \Drupal::service('module_installer')->install(['acquia_search']);
+    \Drupal::service('module_installer')->install(array('acquia_search'));
     drupal_flush_all_caches();
   }
 
@@ -124,12 +92,12 @@ class AcquiaConnectorSearchTest extends WebTestBase {
    * Creates an admin user.
    */
   public function createAdminUser() {
-    $permissions = [
+    $permissions = array(
       'administer site configuration',
       'access administration pages',
       'access toolbar',
       'administer search_api',
-    ];
+    );
     return $this->drupalCreateUser($permissions);
   }
 
@@ -205,7 +173,7 @@ class AcquiaConnectorSearchTest extends WebTestBase {
     $this->assertText('HTTP method', t('The HTTP method label exist'));
     $this->assertOptionSelected('edit-backend-config-connector-config-workarounds-http-method', 'AUTO', t('By default selected AUTO HTTP method'), 'Acquia Search');
     // Server save.
-    $this->drupalPostForm('/admin/config/search/search-api/server/' . $this->server . '/edit', [], 'Save');
+    $this->drupalPostForm('/admin/config/search/search-api/server/' . $this->server . '/edit', array(), 'Save');
     // Delete server.
     $this->drupalGet('/admin/config/search/search-api/server/' . $this->server . '/delete');
     $this->assertResponse(403, t('The Acquia Search Server cannot be deleted via the UI.'));
@@ -233,7 +201,7 @@ class AcquiaConnectorSearchTest extends WebTestBase {
     $this->assertOptionSelected('edit-fields-body-type', 'text', t('Body used for searching'), t('Acquia Search'));
     $this->assertOptionSelected('edit-fields-title-type', 'text', t('Title used for searching'), 'Acquia Search');
     // Save index.
-    $this->drupalPostForm('/admin/config/search/search-api/index/' . $this->index . '/edit', [], 'Save');
+    $this->drupalPostForm('/admin/config/search/search-api/index/' . $this->index . '/edit', array(), 'Save');
     // Delete index.
     $this->drupalGet('/admin/config/search/search-api/index/' . $this->index . '/delete');
     $this->assertResponse(403, t('The Acquia Search Server cannot be deleted via the UI.'));

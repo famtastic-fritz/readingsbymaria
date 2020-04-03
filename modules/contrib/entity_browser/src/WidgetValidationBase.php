@@ -28,9 +28,6 @@ abstract class WidgetValidationBase extends PluginBase implements WidgetValidati
    */
   protected $typedDataManager;
 
-  /**
-   * {@inheritdoc}
-   */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, TypedDataManagerInterface $typed_data_manager) {
     $plugin_definition += [
       'constraint' => NULL,
@@ -68,7 +65,7 @@ abstract class WidgetValidationBase extends PluginBase implements WidgetValidati
   /**
    * {@inheritdoc}
    */
-  public function validate(array $entities, array $options = []) {
+  public function validate(array $entities, $options = []) {
     $plugin_definition = $this->getPluginDefinition();
     $data_definition = $this->getDataDefinition($plugin_definition['data_type'], $plugin_definition['constraint'], $options);
     return $this->validateDataDefinition($data_definition, $entities);
@@ -102,13 +99,13 @@ abstract class WidgetValidationBase extends PluginBase implements WidgetValidati
    *   The data type plugin ID, for which a constraint should be added.
    * @param string $constraint_name
    *   The name of the constraint to add, i.e. its plugin id.
-   * @param array $options
+   * @param $options
    *   Array of options needed by the constraint validator.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
    *   A data definition object for the given data type.
    */
-  protected function getDataDefinition($data_type, $constraint_name = NULL, array $options = []) {
+  protected function getDataDefinition($data_type, $constraint_name = NULL, $options = []) {
     $data_definition = $this->typedDataManager->createDataDefinition($data_type);
     if ($constraint_name) {
       $data_definition->addConstraint($constraint_name, $options);
@@ -122,7 +119,7 @@ abstract class WidgetValidationBase extends PluginBase implements WidgetValidati
    * @param \Drupal\Core\TypedData\DataDefinitionInterface $data_definition
    *   The data definition generated from ::getDataDefinition().
    * @param array $entities
-   *   An array of Entities to validate the definition against.
+   *   An array of Entities to validate the definition against
    *
    * @return \Symfony\Component\Validator\ConstraintViolationListInterface
    *   A list of violations.
@@ -136,5 +133,4 @@ abstract class WidgetValidationBase extends PluginBase implements WidgetValidati
 
     return $violations;
   }
-
 }

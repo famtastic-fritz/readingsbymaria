@@ -2,34 +2,29 @@
 
 namespace Drupal\acquia_connector;
 
+use \Exception;
+
 /**
  * Class ConnectorException.
  *
  * @package Drupal\acquia_connector
  */
-class ConnectorException extends \Exception {
-
-  /**
-   * Custom exception messages.
-   *
-   * @var string[]
-   *   Exception messages as key => value.
-   */
+class ConnectorException extends Exception {
   private $custom = [];
 
   /**
-   * ConnectorException constructor.
+   * Construction method.
    *
    * @param string $message
    *   Exception message.
    * @param int $code
-   *   Exception code.
+   *   Execption code.
    * @param array $custom
    *   Exception messages as key => value.
-   * @param \Exception|null $previous
+   * @param Exception $previous
    *   The previous exception used for the exception chaining. Since 5.3.0.
    */
-  public function __construct($message, $code = 0, array $custom = [], \Exception $previous = NULL) {
+  public function __construct($message, $code = 0, $custom = [], Exception $previous = NULL) {
     parent::__construct($message, $code, $previous);
     $this->custom = $custom;
   }
@@ -65,7 +60,7 @@ class ConnectorException extends \Exception {
    *   Default is TRUE. Return standard code or message.
    *
    * @return mixed
-   *   Custom message of FALSE.
+   *   Custom message of FALSE;
    */
   public function getCustomMessage($key = 'message', $fallback = TRUE) {
     if (isset($this->custom[$key])) {
@@ -78,9 +73,11 @@ class ConnectorException extends \Exception {
       case 'code':
         return $this->getCode();
 
+      break;
       case 'message':
         return $this->getMessage();
 
+      break;
     }
     return FALSE;
   }

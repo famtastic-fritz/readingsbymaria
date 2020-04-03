@@ -157,7 +157,7 @@ class MultiStepDisplay extends SelectionDisplayBase {
 
     $form['use_selected'] = [
       '#type' => 'submit',
-      '#value' => $this->configuration['select_text'],
+      '#value' => $this->t($this->configuration['select_text']),
       '#name' => 'use_selected',
       '#attributes' => [
         'class' => ['entity-browser-use-selected', 'button--primary'],
@@ -391,7 +391,7 @@ class MultiStepDisplay extends SelectionDisplayBase {
   /**
    * Saves new ordering of entities based on weight.
    *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param FormStateInterface $form_state
    *   Form state.
    */
   public static function saveNewOrder(FormStateInterface $form_state) {
@@ -420,26 +420,23 @@ class MultiStepDisplay extends SelectionDisplayBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-
-    $entity_browser = $form_state->getFormObject()->getEntity();
-
-    $defaults = $entity_browser->getSelectionDisplay()->getConfiguration();
-
-    $default_entity_type = $defaults['entity_type'];
-    $default_display = $defaults['display'];
-    $default_display_settings = $defaults['display_settings'];
+    $default_entity_type = $form_state->getValue('entity_type', $this->configuration['entity_type']);
+    $default_display = $form_state->getValue('display', $this->configuration['display']);
+    $default_display_settings = $form_state->getValue('display_settings', $this->configuration['display_settings']);
     $default_display_settings += ['entity_type' => $default_entity_type];
+
+    if ($form_state->isRebuilding()) {
+      $form['#prefix'] = '<div id="multi-step-form-wrapper">';
+    } else {
+      $form['#prefix'] .= '<div id="multi-step-form-wrapper">';
+    }
+    $form['#suffix'] = '</div>';
 
     $entity_types = [];
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
       $entity_types[$entity_type_id] = $entity_type->getLabel();
     }
-
-    $form['multi_step_form_wrapper'] = [
-      '#type' => 'container',
-    ];
-
     $form['entity_type'] = [
       '#type' => 'select',
       '#title' => $this->t('Entity type'),
@@ -448,7 +445,7 @@ class MultiStepDisplay extends SelectionDisplayBase {
       '#options' => $entity_types,
       '#ajax' => [
         'callback' => [$this, 'updateSettingsAjax'],
-        'wrapper' => 'selection-display-config-ajax-wrapper',
+        'wrapper' => 'multi-step-form-wrapper',
       ],
     ];
 
@@ -466,7 +463,7 @@ class MultiStepDisplay extends SelectionDisplayBase {
       '#options' => $displays,
       '#ajax' => [
         'callback' => [$this, 'updateSettingsAjax'],
-        'wrapper' => 'selection-display-config-ajax-wrapper',
+        'wrapper' => 'multi-step-form-wrapper',
       ],
     ];
 
@@ -484,14 +481,14 @@ class MultiStepDisplay extends SelectionDisplayBase {
     $form['select_text'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Select button text'),
-      '#default_value' => $defaults['select_text'],
+      '#default_value' => $this->configuration['select_text'],
       '#description' => $this->t('Text to display on the entity browser select button.'),
     ];
 
     $form['selection_hidden'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Selection hidden by default'),
-      '#default_value' => $defaults['selection_hidden'],
+      '#default_value' => $this->configuration['selection_hidden'],
       '#description' => $this->t('Whether or not the selection should be hidden by default.'),
     ];
 
@@ -499,11 +496,10 @@ class MultiStepDisplay extends SelectionDisplayBase {
   }
 
   /**
-   * Ajax callback that updates multi-step plugin configuration form.
+   * Ajax callback that updates multi-step plugin configuration form on AJAX updates.
    */
   public function updateSettingsAjax(array $form, FormStateInterface $form_state) {
-    $form['selection_display_wrapper']['selection_display_configuration']['#open'] = TRUE;
-    return $form['selection_display_wrapper']['selection_display_configuration'];
+    return $form;
   }
 
 }

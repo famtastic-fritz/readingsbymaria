@@ -16,7 +16,7 @@ interface FieldWidgetDisplayInterface extends PluginInspectionInterface, Configu
   /**
    * Builds and gets render array for the entity.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param EntityInterface $entity
    *   Entity to be displayed.
    *
    * @return array
